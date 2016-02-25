@@ -1,0 +1,20 @@
+{
+  "name": "paginator-with-history",
+  "version": "0.0.0",
+  "authors": [
+    "antoniofortunato <fortuu@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "jquery": "~2.2.0",
+    "foundation-sites": "~6.1.2"
+  }
+}
