@@ -61,7 +61,7 @@ module.exports = function (grunt) {
   grunt.config.set('watch', {
     js: {
       files: ['js/**/*.js'],
-      tasks: ['uglify', 'notify:uglify']
+      tasks: ['uglify', 'copy', 'notify:uglify']
     }
   });
 

@@ -7,17 +7,15 @@
 $(document).ready(function () {
 
 
-  $(".paginator-history").paginatorHistory({
+  $(".jph-history").paginatorHistory({
+
+
+    ajaxDoneAfterItemsInPage: function () {
 
 
 
 
-    ajaxDoneAfterItemsInPage: function(){
-
-
-
-
-    //  alert("ad");
+      //  alert("ad");
     }
 
 

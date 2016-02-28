@@ -21,7 +21,7 @@ for ($i = 0; $i < 9; $i++) {
 
     </div>
 
-    <a class="paginator-item-link" href="http://google.com">link</a>
+    <a class="jph-item-link" href="http://google.com">link</a>
 
 
   </div>

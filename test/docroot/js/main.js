@@ -1,2 +1,2 @@
-$(document).ready(function(){$(".paginator-history").paginatorHistory({"ajaxDoneAfterItemsInPage":function(){}})});
+$(document).ready(function(){$(".jph-history").paginatorHistory({"ajaxDoneAfterItemsInPage":function(){}})});
 //# sourceMappingURL=main.js.map

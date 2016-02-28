@@ -5,12 +5,10 @@
  */
 // Create closure.
 
-//jnes
 (function ($) {
 
   // Plugin definition.
   $.fn.paginatorHistory = function (options) {
-
 
     //default settings: todo....
     var defaults = {
@@ -26,15 +24,16 @@
     var settings = $.extend({}, defaults, options);
 
 
-    var paramPage = "page";
-    var $paginatorListContainer = this.find(".paginator-list-container");
-    var url = this.data("paginator-url") + "?" + paramPage + "=";
 
-    var $next = this.find(".paginator.next");
-    var $prev = this.find(".paginator.prev");
+    var paramPage = "page";
+    var $paginatorListContainer = this.find(".jph-list-container");
+    var url = this.data("jph-url") + "?" + paramPage + "=";
+
+    var $next = this.find(".jph-next");
+    var $prev = this.find(".jph-prev");
     var itemList = ".list-items-page";
     var item = ".item";
-    var linkItem = ".paginator-item-link";
+    var linkItem = ".jph-item-link";
     var currentPage = this.find(itemList).data("page");
 
 

@@ -21,15 +21,15 @@ $pageNext = $pageCurrent + 1;
 <div class="container">
 
 
-  <div class="listing-container paginator-history" data-paginator-url="partials/content.php" data-base-url="test.php">
+  <div class="listing-container jph-history" data-jph-url="partials/content.php">
 
     <?php //if ($pagePrev > 0) { ?>
 
-    <a href="test.php?page=<?= $pagePrev ?>" class="paginator prev" data-page="<?= $pagePrev ?>">previous page</a>
+    <a href="test.php?page=<?= $pagePrev ?>" class="jph-prev" data-page="<?= $pagePrev ?>">previous page</a>
 
     <? //} ?>
 
-    <div class="listing-content paginator-list-container">
+    <div class="listing-content jph-list-container">
 
 
       <div class="list-items-page" data-page="<?= $pageCurrent ?>">
@@ -54,7 +54,7 @@ $pageNext = $pageCurrent + 1;
               </p>
             </div>
 
-            <a class="paginator-item-link" href="http://google.com">link</a>
+            <a class="jph-item-link" href="http://google.com">link</a>
           </div>
         <?php
         }
@@ -62,7 +62,7 @@ $pageNext = $pageCurrent + 1;
       </div>
     </div>
 
-    <a href="test.php?page=<?= $pageNext ?>" class="paginator next" data-page="<?= $pageNext ?>">next page</a>
+    <a href="test.php?page=<?= $pageNext ?>" class="jph-next" data-page="<?= $pageNext ?>">next page</a>
   </div>
 
 </div>
