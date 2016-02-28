@@ -179,8 +179,7 @@ bower_components
 .bower-tmp
 
 ### Grunt lib ###
-/aprilia-webapp/src/main/webapp/docroot/aprilia/src/lib
-/aprilia-webapp/src/main/webapp/docroot/datacatching/src/lib
+/test/docroot/src/lib
 
 ### grunt ###
 # Grunt usually compiles files inside this directory
