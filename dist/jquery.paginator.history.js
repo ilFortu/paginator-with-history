@@ -13,8 +13,12 @@
     //default settings: todo....
     var defaults = {
 
-      textColor: '#000',
-      backgroundColor: '#FFF',
+      paramPage: 'page',
+
+
+
+
+
       ajaxDoneBeforeItemsInPage: function () {
       },
       ajaxDoneAfterItemsInPage: function () {
@@ -25,14 +29,13 @@
 
 
 
-    var paramPage = "page";
     var $paginatorListContainer = this.find(".jph-list-container");
-    var url = this.data("jph-url") + "?" + paramPage + "=";
+    var url = this.data("jph-url") + "?" + settings.paramPage + "=";
 
     var $next = this.find(".jph-next");
     var $prev = this.find(".jph-prev");
-    var itemList = ".list-items-page";
-    var item = ".item";
+    var itemList = ".jph-list-items-page";
+    var item = ".jph-item";
     var linkItem = ".jph-item-link";
     var currentPage = this.find(itemList).data("page");
 
@@ -94,7 +97,7 @@
       var scrollHalfPosition = $(window).scrollTop() + ($(window).height() / 2);
 
 
-      $(".list-items-page").each(function () {
+      $(itemList).each(function () {
 
 
         var top = $(this).position().top;
@@ -137,7 +140,7 @@
 
           if (isNext) {
 
-            $paginatorListContainer.append("<div class='list-items-page' data-page='" + page + "'>" + content + "</div>");
+            $paginatorListContainer.append("<div class='jph-list-items-page' data-page='" + page + "'>" + content + "</div>");
 
             loadingNext = false;
 
@@ -146,7 +149,7 @@
 
           } else {
 
-            $paginatorListContainer.prepend("<div class='list-items-page' data-page='" + page + "'>" + content + "</div>");
+            $paginatorListContainer.prepend("<div class='jph-list-items-page' data-page='" + page + "'>" + content + "</div>");
 
             var firstPageHeight = $("div.list-items-page:first").height();
 
@@ -180,9 +183,9 @@
       var currentPage = window.location.href;
 
       //if there isn't the param page in the url
-      if (currentPage.indexOf(paramPage + "=") < 0) {
+      if (currentPage.indexOf(settings.paramPage + "=") < 0) {
 
-        newLocation = currentPage + (currentPage.split('?')[1] ? '&' : '?') + paramPage + "=" + page;
+        newLocation = currentPage + (currentPage.split('?')[1] ? '&' : '?') + settings.paramPage + "=" + page;
 
       } else {
 

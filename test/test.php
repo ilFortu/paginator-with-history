@@ -21,7 +21,7 @@ $pageNext = $pageCurrent + 1;
 <div class="container">
 
 
-  <div class="listing-container jph-history" data-jph-url="partials/content.php">
+  <div class="jph-history" data-jph-url="partials/content.php">
 
     <?php //if ($pagePrev > 0) { ?>
 
@@ -32,7 +32,7 @@ $pageNext = $pageCurrent + 1;
     <div class="listing-content jph-list-container">
 
 
-      <div class="list-items-page" data-page="<?= $pageCurrent ?>">
+      <div class="jph-list-items-page" data-page="<?= $pageCurrent ?>">
 
 
         <?php
@@ -40,7 +40,7 @@ $pageNext = $pageCurrent + 1;
           ?>
 
 
-          <div id="item-<?= $pageCurrent ?>-<?= $i ?>" class="item">
+          <div id="item-<?= $pageCurrent ?>-<?= $i ?>" class="jph-item">
 
             <h3>Titolo di prova <?= $pageCurrent ?>-<?= $i ?></h3>
 

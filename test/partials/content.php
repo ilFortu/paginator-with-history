@@ -6,9 +6,9 @@ for ($i = 0; $i < 9; $i++) {
   ?>
 
 
-  <div id="item-<?= $page ?>-<?= $i ?>" class="item">
+  <div id="item-<?= $page ?>-<?= $i ?>" class="jph-item">
 
-    <h3> Titolo di prova <?= $page ?>-<?= $i ?></h3>
+    <h3>Titolo di prova <?= $page ?>-<?= $i ?></h3>
 
 
     <div class="text">
