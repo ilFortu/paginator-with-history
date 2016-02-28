@@ -1,7 +1,11 @@
 /**
  * Created by antoniofortunato on 02/02/16.
+ *
+ * Never ending scroll with history
  */
 // Create closure.
+
+//jnes
 (function ($) {
 
   // Plugin definition.
