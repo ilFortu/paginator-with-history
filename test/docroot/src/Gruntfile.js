@@ -94,15 +94,21 @@ module.exports = function (grunt) {
         message: 'uglify completed'
       }
     },
-    sprite: {
+    dist: {
       options: {
-        message: 'sprite completed'
+        message: 'dist update'
       }
     }
   });
 
   //WATCH
   grunt.config.set('watch', {
+
+    dist: {
+      files: ['../../../dist/*.js'],
+      tasks: ['copy', 'notify:dist']
+    },
+
     js: {
       files: ['js/**/*.js'],
       tasks: ['uglify', 'notify:uglify']
@@ -128,7 +134,7 @@ module.exports = function (grunt) {
       logConcurrentOutput: true
     },
     watch: {
-      tasks: ['watch:sass', 'watch:js']
+      tasks: ['watch:sass', 'watch:js', 'watch:dist']
     }
   });
 

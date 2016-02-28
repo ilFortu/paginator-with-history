@@ -21,8 +21,6 @@
       },
       ajaxDoneAfterItemsInPage: function () {
       }
-
-
     };
 
     var settings = $.extend({}, defaults, options);
