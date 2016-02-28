@@ -1,5 +1,5 @@
 {
-  "name": "jquery-never-ending-scroll-with-history",
+  "name": "paginator-with-history",
   "version": "0.0.0",
   "devDependencies": {
     "grunt": "^0.4.5",
