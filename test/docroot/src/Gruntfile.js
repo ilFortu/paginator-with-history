@@ -10,28 +10,15 @@ module.exports = function (grunt) {
         // includes files within path
         {
           expand: true,
-          src: ['../../../dist/jquery.paginator.history.min.js'],
+          src: ['../../../dist/jquery.paginator.history.min.*'],
           dest: '../js',
           flatten: true,
           filter: 'isFile'
         },
+
         {
           expand: true,
-          src: ['../../../dist/jquery.paginator.history.min.js.map'],
-          dest: '../js',
-          flatten: true,
-          filter: 'isFile'
-        },
-        {
-          expand: true,
-          src: ['bower_components/jquery/dist/jquery.min.js'],
-          dest: '../js',
-          flatten: true,
-          filter: 'isFile'
-        },
-        {
-          expand: true,
-          src: ['bower_components/jquery/dist/jquery.min.map'],
+          src: ['bower_components/jquery/dist/jquery.min.*'],
           dest: '../js',
           flatten: true,
           filter: 'isFile'
@@ -115,7 +102,7 @@ module.exports = function (grunt) {
     },
 
     sass: {
-      files: ['scss/**/*.scss', '../../../common/scss/*.scss'],
+      files: ['scss/**/*.scss'],
       tasks: ['sass', 'notify:sass']
     }
   });
