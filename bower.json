@@ -1,0 +1,25 @@
+{
+  "name": "paginator-with-history",
+  "homepage": "https://github.com/ilFortu/paginator-with-history",
+  "version": "0.0.1-alpha",
+  "authors": [
+    "antoniofortunato <antonio.fortunato87@gmail.com>"
+  ],
+  "description": "Jquery plugin for never ending scroll pagination with history",
+  "main": "dist/jquery.paginator.history.js",
+  "moduleType": [],
+  "keywords": [
+    "jquery plugin",
+    "never ending scroll",
+    "infinite scroll",
+    "history"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
