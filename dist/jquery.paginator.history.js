@@ -16,9 +16,6 @@
       paramPage: 'page',
 
 
-
-
-
       ajaxDoneBeforeItemsInPage: function () {
       },
       ajaxDoneAfterItemsInPage: function () {
@@ -28,16 +25,16 @@
     var settings = $.extend({}, defaults, options);
 
 
-
     var $paginatorListContainer = this.find(".jph-list-container");
     var url = this.data("jph-url") + "?" + settings.paramPage + "=";
 
     var $next = this.find(".jph-next");
     var $prev = this.find(".jph-prev");
-    var itemList = ".jph-list-items-page";
+    var listItemsPage = "jph-list-items-page";
+    var listItemsPageClass = "." + listItemsPage;
     var item = ".jph-item";
     var linkItem = ".jph-item-link";
-    var currentPage = this.find(itemList).data("page");
+    var currentPage = this.find(listItemsPageClass).data("page");
 
 
     var loadingNext = false;
@@ -58,7 +55,7 @@
     this.on("click", linkItem, function (evt) {
       //evt.preventDefault();
 
-      changeLocation($(this).parents(itemList).attr("data-page"), $(this).parents(item).attr("id"));
+      changeLocation($(this).parents(listItemsPageClass).attr("data-page"), $(this).parents(item).attr("id"));
 
     });
 
@@ -97,7 +94,7 @@
       var scrollHalfPosition = $(window).scrollTop() + ($(window).height() / 2);
 
 
-      $(".jph-list-items-page").each(function () {
+      $(listItemsPageClass).each(function () {
 
 
         var top = $(this).position().top;
@@ -138,9 +135,15 @@
 
         if (content != "") {
 
+
+          var newPageBlock = "<div class='" + listItemsPage + "' data-page='" + page + "'>" + content + "</div>";
+
+
+          console.log(newPageBlock);
+
           if (isNext) {
 
-            $paginatorListContainer.append("<div class='jph-list-items-page' data-page='" + page + "'>" + content + "</div>");
+            $paginatorListContainer.append(newPageBlock);
 
             loadingNext = false;
 
@@ -149,9 +152,9 @@
 
           } else {
 
-            $paginatorListContainer.prepend("<div class='jph-list-items-page' data-page='" + page + "'>" + content + "</div>");
+            $paginatorListContainer.prepend(newPageBlock);
 
-            var firstPageHeight = $("div.jph-list-items-page:first").height();
+            var firstPageHeight = $("div" + listItemsPageClass + ":first").height();
 
             window.scrollTo(0, $(window).scrollTop() + firstPageHeight); // adjust scroll
 
