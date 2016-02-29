@@ -66,8 +66,8 @@ $pageNext = $pageCurrent + 1;
   </div>
 
 </div>
-<script src="docroot/js/jquery.min.js">/**/</script>
-<script src="docroot/js/jquery.paginator.history.min.js">/**/</script>
+<script src="docroot/js/jquery.js">/**/</script>
+<script src="docroot/js/jquery.paginator.history.js">/**/</script>
 <script src="docroot/js/main.js">/**/</script>
 </body>
 </html>

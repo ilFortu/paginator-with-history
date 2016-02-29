@@ -14,6 +14,8 @@
     var defaults = {
 
       paramPage: 'page',
+      //selector that identify the container of the items for the ajax call
+      selectorContainer: null,
 
 
       ajaxDoneBeforeItemsInPage: function () {
@@ -133,39 +135,46 @@
         settings.ajaxDoneBeforeItemsInPage.call(this);
 
 
-        if (content != "") {
+        var html = content;
 
 
-          var newPageBlock = "<div class='" + listItemsPage + "' data-page='" + page + "'>" + content + "</div>";
+        if (content != null && content != "") {
 
+          if (settings.selectorContainer != null) {
 
-          console.log(newPageBlock);
-
-          if (isNext) {
-
-            $paginatorListContainer.append(newPageBlock);
-
-            loadingNext = false;
-
-            $next.attr("data-page", page + 1);
-
-
-          } else {
-
-            $paginatorListContainer.prepend(newPageBlock);
-
-            var firstPageHeight = $("div" + listItemsPageClass + ":first").height();
-
-            window.scrollTo(0, $(window).scrollTop() + firstPageHeight); // adjust scroll
-
-
-            if (page > 1) {
-
-              loadingPrev = false;
-              $prev.attr("data-page", page - 1);
-            }
+            html = $(content).find(settings.selectorContainer).html();
           }
 
+          if (typeof html !== 'undefined') {
+
+
+            var newPageBlock = "<div class='" + listItemsPage + "' data-page='" + page + "'>" + html + "</div>";
+
+            if (isNext) {
+
+              $paginatorListContainer.append(newPageBlock);
+
+              loadingNext = false;
+
+              $next.attr("data-page", page + 1);
+
+
+            } else {
+
+              $paginatorListContainer.prepend(newPageBlock);
+
+              var firstPageHeight = $("div" + listItemsPageClass + ":first").height();
+
+              window.scrollTo(0, $(window).scrollTop() + firstPageHeight); // adjust scroll
+
+
+              if (page > 1) {
+
+                loadingPrev = false;
+                $prev.attr("data-page", page - 1);
+              }
+            }
+          }
 
           //  changeLocation(page);
         }

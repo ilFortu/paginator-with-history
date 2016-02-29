@@ -10,7 +10,7 @@ module.exports = function (grunt) {
         // includes files within path
         {
           expand: true,
-          src: ['../../../dist/jquery.paginator.history.min.*'],
+          src: ['../../../dist/jquery.paginator.history.*'],
           dest: '../js',
           flatten: true,
           filter: 'isFile'
@@ -18,7 +18,7 @@ module.exports = function (grunt) {
 
         {
           expand: true,
-          src: ['bower_components/jquery/dist/jquery.min.*'],
+          src: ['bower_components/jquery/dist/jquery.*'],
           dest: '../js',
           flatten: true,
           filter: 'isFile'
