@@ -29,7 +29,7 @@ $pageNext = $pageCurrent + 1;
 
     <? //} ?>
 
-    <div class="listing-content jph-list-container">
+    <div class="jph-list-container">
 
 
       <div class="jph-list-items-page" data-page="<?= $pageCurrent ?>">

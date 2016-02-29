@@ -97,7 +97,7 @@
       var scrollHalfPosition = $(window).scrollTop() + ($(window).height() / 2);
 
 
-      $(itemList).each(function () {
+      $(".jph-list-items-page").each(function () {
 
 
         var top = $(this).position().top;
@@ -151,7 +151,7 @@
 
             $paginatorListContainer.prepend("<div class='jph-list-items-page' data-page='" + page + "'>" + content + "</div>");
 
-            var firstPageHeight = $("div.list-items-page:first").height();
+            var firstPageHeight = $("div.jph-list-items-page:first").height();
 
             window.scrollTo(0, $(window).scrollTop() + firstPageHeight); // adjust scroll
 
