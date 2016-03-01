@@ -16,7 +16,7 @@
   // Plugin definition.
   $.fn.paginatorHistory = function (options) {
 
-    //default settings: todo....
+    //default settings
     var defaults = {
 
       paramPage: 'page',
@@ -33,204 +33,222 @@
     var settings = $.extend({}, defaults, options);
 
 
-    var $paginatorListContainer = this.find(".jph-list-container");
-    var ajaxUrl = this.data("jph-ajax-url");
-    ajaxUrl = ajaxUrl + (ajaxUrl.split('?')[1] ? '&' : '?') + settings.paramPage + "=";
-
     var $prev = this.find(".jph-prev");
     var $next = this.find(".jph-next");
 
-    var listItemsPage = "jph-list-items-page";
-    var listItemsPageClass = "." + listItemsPage;
-    var item = ".jph-item";
-    var linkItem = ".jph-item-link";
-    var currentPage = this.find(listItemsPageClass).data("page");
+
+    //execute the plugin if there is at least one link to prev or next content...
+    if ($prev.length > 0 || $next.length > 0) {
 
 
-    var loadingNext = false;
+      var $paginatorListContainer = this.find(".jph-list-container");
+      var ajaxUrl = this.data("jph-ajax-url");
+      ajaxUrl = ajaxUrl + (ajaxUrl.split('?')[1] ? '&' : '?') + settings.paramPage + "=";
 
 
-    var loadingPrev = true;
+      var listItemsPage = "jph-list-items-page";
+      var listItemsPageClass = "." + listItemsPage;
+      var item = ".jph-item";
+      var linkItem = ".jph-item-link";
+      var currentPage = this.find(listItemsPageClass).data("page");
 
 
-    //if exists the previous link
-    if ($prev.length > 0) {
-
-      loadingPrev = $prev.attr("data-page") == 0 ? true : false;
-
-      //if at start it's not the first page I call a previous page...
-      if ($prev.attr("data-page") > 0) {
-
-        loadingPrev = true;
-        //console.log("PREV");
-
-        ajaxCall($prev.attr("data-page"), false);
-      }
-    }
+      var loadingNext = false;
+      var loadingPrev = false;
 
 
-    //click item link
-    this.on("click", linkItem, function (evt) {
-      //evt.preventDefault();
+      //if exists the previous link
+      if ($prev.length > 0) {
 
-      changeLocation($(this).parents(listItemsPageClass).attr("data-page"), $(this).parents(item).attr("id"));
+        loadingPrev = $prev.attr("data-page") == 0 ? true : false;
 
-    });
+        //if at start it's not the first page I call a previous page...
+        if ($prev.attr("data-page") > 0) {
 
+          loadingPrev = true;
+          //console.log("PREV");
 
-    $(window).scroll(function () {
-      // handle scroll events to update content
-      var scrollPos = $(window).scrollTop();
-
-      //console.log(scrollPos + $(window).height());
-
-
-      //next page..
-      if ($next.length > 0 && !loadingNext && $next.position().top - 200 < scrollPos + $(window).height()) {
-
-        loadingNext = true;
-        //console.log("NEXT");
-
-        ajaxCall($next.attr("data-page"), true);
-      }
-
-
-      //prev page
-      if (!loadingPrev && scrollPos - $prev.position().top < 200) {
-
-        loadingPrev = true;
-        console.log("PREV");
-
-        ajaxCall($prev.attr("data-page"), false);
-
-
-      }
-
-
-      //half window
-      var scrollHalfPosition = $(window).scrollTop() + ($(window).height() / 2);
-
-
-      $(listItemsPageClass).each(function () {
-
-
-        var top = $(this).position().top;
-        var bottom = $(this).position().top + $(this).height();
-
-
-        //  console.log(scrollHalfPosition +" || "+ top +" / "+ bottom);
-
-        if ($(this).attr("data-page") != currentPage && top <= scrollHalfPosition && scrollHalfPosition <= bottom) {
-
-
-          //console.log($(this).position().top +" |||| "+ scrollHalfPosition +" || "+ top +" / "+ bottom);
-
-          currentPage = $(this).attr("data-page");
-          changeLocation(currentPage, null);
-
+          ajaxCall($prev.attr("data-page"), false);
         }
+      }
 
+
+      //click item link
+      this.on("click", linkItem, function (evt) {
+        //evt.preventDefault();
+
+        changeLocation($(this).parents(listItemsPageClass).attr("data-page"), $(this).parents(item).attr("id"));
 
       });
 
 
-    });
+      $(window).scroll(function () {
+        // handle scroll events to update content
+        var scrollPos = $(window).scrollTop();
+
+        //console.log(scrollPos + $(window).height());
 
 
-    function ajaxCall(page, isNext) {
+        //next page..
+        if ($next.length > 0 && !loadingNext && $next.position().top - 200 < scrollPos + $(window).height()) {
 
-      page = parseInt(page);
+          loadingNext = true;
+          //console.log("NEXT");
 
-      $.ajax({
-        url: ajaxUrl + page,
-        context: document.body
-      }).done(function (content) {
-
-        // Here's the callback:
-        settings.ajaxDoneBeforeItemsInPage.call(this);
+          ajaxCall($next.attr("data-page"), true);
+        }
 
 
-        var html = content;
+        //prev page
+        if ($prev.length > 0 && !loadingPrev && scrollPos - $prev.position().top < 200) {
+
+          loadingPrev = true;
+          console.log("PREV");
+
+          ajaxCall($prev.attr("data-page"), false);
 
 
-        if (content != null && content != "") {
+        }
 
-          if (settings.selectorContainer != null) {
 
-            html = $(content).find(settings.selectorContainer).html();
+        //half window
+        var scrollHalfPosition = $(window).scrollTop() + ($(window).height() / 2);
+
+
+        $(listItemsPageClass).each(function () {
+
+
+          var top = $(this).position().top;
+          var bottom = $(this).position().top + $(this).height();
+
+
+          //  console.log(scrollHalfPosition +" || "+ top +" / "+ bottom);
+
+          if ($(this).attr("data-page") != currentPage && top <= scrollHalfPosition && scrollHalfPosition <= bottom) {
+
+
+            //console.log($(this).position().top +" |||| "+ scrollHalfPosition +" || "+ top +" / "+ bottom);
+
+            currentPage = $(this).attr("data-page");
+            changeLocation(currentPage, null);
+
           }
 
-          if (typeof html !== 'undefined') {
+
+        });
+      });
+
+      //at start simulate scroll
+      $(window).trigger("scroll");
 
 
-            var newPageBlock = "<div class='" + listItemsPage + "' data-page='" + page + "'>" + html + "</div>";
+      function ajaxCall(page, isNext) {
+
+        page = parseInt(page);
+
+        $.ajax({
+          url: ajaxUrl + page,
+          context: document.body
+        }).done(function (content) {
+
+          // Here's the callback:
+          settings.ajaxDoneBeforeItemsInPage.call(this);
+
+
+          var html = content;
+
+
+          if (content != null && content != "") {
+
+            if (settings.selectorContainer != null) {
+
+              html = $(content).find(settings.selectorContainer).html();
+            }
+
+            if (typeof html !== 'undefined') {
+
+
+              var newPageBlock = "<div class='" + listItemsPage + "' data-page='" + page + "'>" + html + "</div>";
+
+              if (isNext) {
+
+                $paginatorListContainer.append(newPageBlock);
+
+                loadingNext = false;
+
+                $next.attr("data-page", page + 1);
+
+
+              } else {
+
+                $paginatorListContainer.prepend(newPageBlock);
+
+                var firstPageHeight = $("div" + listItemsPageClass + ":first").height();
+
+                window.scrollTo(0, $(window).scrollTop() + firstPageHeight); // adjust scroll
+
+
+                if (page > 1) {
+
+                  loadingPrev = false;
+                  $prev.attr("data-page", page - 1);
+                }
+              }
+            }
+
+            //  changeLocation(page);
+          } else {
+
 
             if (isNext) {
 
-              $paginatorListContainer.append(newPageBlock);
 
-              loadingNext = false;
-
-              $next.attr("data-page", page + 1);
-
+              $next.remove();
 
             } else {
 
-              $paginatorListContainer.prepend(newPageBlock);
-
-              var firstPageHeight = $("div" + listItemsPageClass + ":first").height();
-
-              window.scrollTo(0, $(window).scrollTop() + firstPageHeight); // adjust scroll
-
-
-              if (page > 1) {
-
-                loadingPrev = false;
-                $prev.attr("data-page", page - 1);
-              }
+              $prev.remove();
             }
+
           }
 
-          //  changeLocation(page);
+
+          // Here's the callback:
+          settings.ajaxDoneAfterItemsInPage.call(this);
+
+        });
+      }
+
+
+      function changeLocation(page, itemId) {
+
+
+        var newLocation = "";
+
+        var currentPage = window.location.href;
+
+        //if there isn't the param page in the url
+        if (currentPage.indexOf(settings.paramPage + "=") < 0) {
+
+          newLocation = currentPage + (currentPage.split('?')[1] ? '&' : '?') + settings.paramPage + "=" + page;
+
+        } else {
+
+          newLocation = currentPage.replace(/(page=).*?((&)(.)*)?$/, '$1' + page + '$2');
+
         }
 
 
-        // Here's the callback:
-        settings.ajaxDoneAfterItemsInPage.call(this);
+        if (typeof itemId !== 'undefined' && itemId != null) {
 
-      });
-    }
-
-
-    function changeLocation(page, itemId) {
+          newLocation += "#" + itemId;
+        }
 
 
-      var newLocation = "";
-
-      var currentPage = window.location.href;
-
-      //if there isn't the param page in the url
-      if (currentPage.indexOf(settings.paramPage + "=") < 0) {
-
-        newLocation = currentPage + (currentPage.split('?')[1] ? '&' : '?') + settings.paramPage + "=" + page;
-
-      } else {
-
-        newLocation = currentPage.replace(/(page=).*?((&)(.)*)?$/, '$1' + page + '$2');
-
+        history.replaceState(null, null, newLocation);
       }
-
-
-      if (typeof itemId !== 'undefined' && itemId != null) {
-
-        newLocation += "#" + itemId;
-      }
-
-
-      history.replaceState(null, null, newLocation);
     }
-  };
+  }
 
   // End of closure.
-
 })(jQuery);
