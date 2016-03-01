@@ -23,11 +23,11 @@ $pageNext = $pageCurrent + 1;
 
   <div class="jph-history" data-jph-url="partials/content.php">
 
-    <?php //if ($pagePrev > 0) { ?>
+    <?php if ($pagePrev > 0) { ?>
 
-    <a href="test.php?page=<?= $pagePrev ?>" class="jph-prev" data-page="<?= $pagePrev ?>">previous page</a>
+      <a href="test.php?page=<?= $pagePrev ?>" class="jph-prev" data-page="<?= $pagePrev ?>">previous page</a>
 
-    <? //} ?>
+    <? } ?>
 
     <div class="jph-list-container">
 
@@ -56,7 +56,7 @@ $pageNext = $pageCurrent + 1;
 
             <a class="jph-item-link" href="http://google.com">link</a>
           </div>
-        <?php
+          <?php
         }
         ?>
       </div>

@@ -1,5 +1,4 @@
 /** @preserve
- * Created by antoniofortunato on 02/02/16.
  *
  * Never ending scroll with history
  *
@@ -37,8 +36,9 @@
     var $paginatorListContainer = this.find(".jph-list-container");
     var url = this.data("jph-url") + "?" + settings.paramPage + "=";
 
-    var $next = this.find(".jph-next");
     var $prev = this.find(".jph-prev");
+    var $next = this.find(".jph-next");
+
     var listItemsPage = "jph-list-items-page";
     var listItemsPageClass = "." + listItemsPage;
     var item = ".jph-item";
@@ -47,20 +47,28 @@
 
 
     var loadingNext = false;
-    var loadingPrev = $prev.attr("data-page") == 0 ? true : false;
 
 
-    //if at start it's not the first page I call a previous page...
-    if ($prev.attr("data-page") > 0) {
+    var loadingPrev = true;
 
-      loadingPrev = true;
-      console.log("PREV");
 
-      ajaxCall($prev.attr("data-page"), false);
+    //if exists the previous link
+    if ($prev.length > 0) {
 
+      loadingPrev = $prev.attr("data-page") == 0 ? true : false;
+
+      //if at start it's not the first page I call a previous page...
+      if ($prev.attr("data-page") > 0) {
+
+        loadingPrev = true;
+        console.log("PREV");
+
+        ajaxCall($prev.attr("data-page"), false);
+      }
     }
 
 
+    //click item link
     this.on("click", linkItem, function (evt) {
       //evt.preventDefault();
 
@@ -77,7 +85,7 @@
 
 
       //next page..
-      if (!loadingNext && $next.position().top - 200 < scrollPos + $(window).height()) {
+      if ($next.length > 0 && !loadingNext && $next.position().top - 200 < scrollPos + $(window).height()) {
 
         loadingNext = true;
         console.log("NEXT");
@@ -87,7 +95,6 @@
 
 
       //prev page
-
       if (!loadingPrev && scrollPos - $prev.position().top < 200) {
 
         loadingPrev = true;
