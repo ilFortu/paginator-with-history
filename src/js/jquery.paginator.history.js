@@ -34,7 +34,8 @@
 
 
     var $paginatorListContainer = this.find(".jph-list-container");
-    var url = this.data("jph-url") + "?" + settings.paramPage + "=";
+    var ajaxUrl = this.data("jph-ajax-url");
+    ajaxUrl = ajaxUrl + (ajaxUrl.split('?')[1] ? '&' : '?') + settings.paramPage + "=";
 
     var $prev = this.find(".jph-prev");
     var $next = this.find(".jph-next");
@@ -61,7 +62,7 @@
       if ($prev.attr("data-page") > 0) {
 
         loadingPrev = true;
-        console.log("PREV");
+        //console.log("PREV");
 
         ajaxCall($prev.attr("data-page"), false);
       }
@@ -88,7 +89,7 @@
       if ($next.length > 0 && !loadingNext && $next.position().top - 200 < scrollPos + $(window).height()) {
 
         loadingNext = true;
-        console.log("NEXT");
+        //console.log("NEXT");
 
         ajaxCall($next.attr("data-page"), true);
       }
@@ -141,7 +142,7 @@
       page = parseInt(page);
 
       $.ajax({
-        url: url + page,
+        url: ajaxUrl + page,
         context: document.body
       }).done(function (content) {
 
