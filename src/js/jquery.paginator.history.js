@@ -2,7 +2,7 @@
  *
  * Never ending scroll with history
  *
- Version: 0.0.3
+ Version: 0.0.4
  Author: Antonio Fortunato
  Website: https://github.com/ilFortu/paginator-with-history
  Docs: https://github.com/ilFortu/paginator-with-history
