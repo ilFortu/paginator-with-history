@@ -1,7 +1,14 @@
-/**
+/** @preserve
  * Created by antoniofortunato on 02/02/16.
  *
  * Never ending scroll with history
+ *
+ Version: 0.0.3
+ Author: Antonio Fortunato
+ Website: https://github.com/ilFortu/paginator-with-history
+ Docs: https://github.com/ilFortu/paginator-with-history
+ Repo: https://github.com/ilFortu/paginator-with-history
+ Issues: https://github.com/ilFortu/paginator-with-history/issues
  */
 // Create closure.
 

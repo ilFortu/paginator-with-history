@@ -24,16 +24,18 @@ module.exports = function (grunt) {
 
     app: {
       options: {
-        //       compress: false,
+        //compress: false,
         sourceMap: true,
         drop_console: true,
+        screwIE8: true,
+        preserveComments: /(?:^!|@(?:license|preserve|cc_on))/,
+        mangle: false,
         beautify: {
-          //        beautify: true,
+          //beautify: true,
           ascii_only: true,
           quote_keys: true
-        },
-        preserveComments: false,
-        mangle: false
+        }
+
       },
       files: {
 
