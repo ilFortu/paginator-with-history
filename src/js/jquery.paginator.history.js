@@ -13,7 +13,6 @@
 
 (function ($) {
 
-
   // Plugin definition.
   $.fn.paginatorHistory = function (options) {
 
@@ -21,8 +20,10 @@
     var defaults = {
 
       paramPage: 'page',
+      offsetCallPage: 200,
       //selector that identify the container of the items for the ajax call
       selectorContainer: null,
+      blockPageHtmlElement: 'div',
 
 
       ajaxDoneBeforeItemsInPage: function () {
@@ -50,7 +51,7 @@
       var listItemsPage = "jph-list-items-page";
       var listItemsPageClass = "." + listItemsPage;
       var item = ".jph-item";
-      var linkItem = ".jph-item-link";
+
       var currentPage = this.find(listItemsPageClass).data("page");
 
 
@@ -72,18 +73,19 @@
 
 
       //click item link
-      this.on("click", linkItem, function (evt) {
-        //evt.preventDefault();
-
-        changeLocation($(this).parents(listItemsPageClass).attr("data-page"), $(this).parents(item).attr("id"));
-
-      });
+      //var linkItem = ".jph-item-link";
+      //this.on("click", linkItem, function (evt) {
+      //  //evt.preventDefault();
+      //
+      //  changeLocation($(this).parents(listItemsPageClass).attr("data-page"), $(this).parents(item).attr("id"));
+      //
+      //});
 
 
       $(window).scroll(function () {
 
 
-        console.log("scrolling");
+        // console.log("scrolling");
 
         // handle scroll events to update content
         var scrollPos = $(window).scrollTop();
@@ -92,7 +94,7 @@
 
 
         //next page..
-        if ($next.length > 0 && !loadingNext && $next.position().top - 200 < scrollPos + $(window).height()) {
+        if ($next.length > 0 && !loadingNext && $next.position().top - settings.offsetCallPage < scrollPos + $(window).height()) {
 
           loadingNext = true;
           console.log("NEXT");
@@ -102,7 +104,7 @@
 
 
         //prev page
-        if ($prev.length > 0 && !loadingPrev && scrollPos - $prev.position().top < 200) {
+        if ($prev.length > 0 && !loadingPrev && scrollPos - $prev.position().top < settings.offsetCallPage) {
 
           loadingPrev = true;
           console.log("PREV");
@@ -171,7 +173,7 @@
             if (typeof html !== 'undefined' && html != "") {
 
 
-              var newPageBlock = "<div class='" + listItemsPage + "' data-page='" + page + "'>" + html + "</div>";
+              var newPageBlock = "<" + settings.blockPageHtmlElement + " class='" + listItemsPage + "' data-page='" + page + "'>" + html + "</" + settings.blockPageHtmlElement + ">";
 
               if (isNext) {
 
@@ -183,11 +185,33 @@
 
 
               } else {
+                //isPrev
+
+                //var scrollTop = document.documentElement.scrollTop;
+                //
+                //console.log(document.documentElement.scrollTop);
+                //console.log(window.pageYOffset);
+                //console.log(document.documentElement.clientTop);
 
                 $paginatorListContainer.prepend(newPageBlock);
 
+
+                var scrollTop = window.pageYOffset;
+
+                var scrollTo = $paginatorListContainer.find(listItemsPageClass + "[data-page='" + currentPage + "']").position().top;
+
+                if (scrollTop != 0) {
+
+                  var heightPrevPage = $paginatorListContainer.find(listItemsPageClass + "[data-page='" + page + "']").height();
+                  scrollTo = window.pageYOffset + heightPrevPage;
+                }
+
+
                 // adjust scroll to the current page
-                window.scrollTo(0, $paginatorListContainer.find(listItemsPageClass + "[data-page='" + currentPage + "']").position().top);
+                window.scrollTo(0, scrollTo);
+
+
+                console.log(scrollTo);
 
 
                 if (page > 1) {
