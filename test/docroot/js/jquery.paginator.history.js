@@ -13,6 +13,7 @@
 
 (function ($) {
 
+
   // Plugin definition.
   $.fn.paginatorHistory = function (options) {
 
@@ -43,7 +44,7 @@
 
       var $paginatorListContainer = this.find(".jph-list-container");
       var ajaxUrl = this.data("jph-ajax-url");
-      ajaxUrl = ajaxUrl + (ajaxUrl.split('?')[1] ? '&' : '?') + settings.paramPage + "=";
+      // ajaxUrl = ajaxUrl + (ajaxUrl.split('?')[1] ? '&' : '?') + settings.paramPage + "=";
 
 
       var listItemsPage = "jph-list-items-page";
@@ -58,18 +59,15 @@
 
 
       //if exists the previous link
-      if ($prev.length > 0) {
+      if ($prev.length > 0 && $prev.attr("data-page") > 0) {
 
-        loadingPrev = $prev.attr("data-page") == 0 ? true : false;
+        loadingPrev = true;
+        //console.log("PREV");
 
-        //if at start it's not the first page I call a previous page...
-        if ($prev.attr("data-page") > 0) {
 
-          loadingPrev = true;
-          //console.log("PREV");
+        //  window.scrollTo(0, 200);
 
-          ajaxCall($prev.attr("data-page"), false);
-        }
+        ajaxCall($prev.attr("data-page"), false);
       }
 
 
@@ -83,6 +81,10 @@
 
 
       $(window).scroll(function () {
+
+
+        console.log("scrolling");
+
         // handle scroll events to update content
         var scrollPos = $(window).scrollTop();
 
@@ -93,7 +95,7 @@
         if ($next.length > 0 && !loadingNext && $next.position().top - 200 < scrollPos + $(window).height()) {
 
           loadingNext = true;
-          //console.log("NEXT");
+          console.log("NEXT");
 
           ajaxCall($next.attr("data-page"), true);
         }
@@ -146,8 +148,9 @@
 
         page = parseInt(page);
 
+
         $.ajax({
-          url: ajaxUrl + page,
+          url: setUrlwithPagination(ajaxUrl, page),
           context: document.body
         }).done(function (content) {
 
@@ -156,7 +159,7 @@
 
 
           var html = content;
-
+          var removeLink = false;
 
           if (content != null && content != "") {
 
@@ -165,7 +168,7 @@
               html = $(content).find(settings.selectorContainer).html();
             }
 
-            if (typeof html !== 'undefined') {
+            if (typeof html !== 'undefined' && html != "") {
 
 
               var newPageBlock = "<div class='" + listItemsPage + "' data-page='" + page + "'>" + html + "</div>";
@@ -183,23 +186,32 @@
 
                 $paginatorListContainer.prepend(newPageBlock);
 
-                var firstPageHeight = $("div" + listItemsPageClass + ":first").height();
-
-                window.scrollTo(0, $(window).scrollTop() + firstPageHeight); // adjust scroll
+                // adjust scroll to the current page
+                window.scrollTo(0, $paginatorListContainer.find(listItemsPageClass + "[data-page='" + currentPage + "']").position().top);
 
 
                 if (page > 1) {
 
                   loadingPrev = false;
                   $prev.attr("data-page", page - 1);
+
+                } else {
+
+                  removeLink = true;
                 }
               }
+            } else {
+
+              removeLink = true;
             }
 
             //  changeLocation(page);
           } else {
 
+            removeLink = true;
+          }
 
+          if (removeLink) {
             if (isNext) {
 
 
@@ -209,7 +221,6 @@
 
               $prev.remove();
             }
-
           }
 
 
@@ -223,21 +234,7 @@
       function changeLocation(page, itemId) {
 
 
-        var newLocation = "";
-
-        var currentPage = window.location.href;
-
-        //if there isn't the param page in the url
-        if (currentPage.indexOf(settings.paramPage + "=") < 0) {
-
-          newLocation = currentPage + (currentPage.split('?')[1] ? '&' : '?') + settings.paramPage + "=" + page;
-
-        } else {
-
-          newLocation = currentPage.replace(/(page=).*?((&)(.)*)?$/, '$1' + page + '$2');
-
-        }
-
+        var newLocation = setUrlwithPagination(window.location.href, page);
 
         if (typeof itemId !== 'undefined' && itemId != null) {
 
@@ -247,8 +244,30 @@
 
         history.replaceState(null, null, newLocation);
       }
+
+
+      function setUrlwithPagination(url, page) {
+
+
+        //if there isn't the param page in the url
+        if (url.indexOf(settings.paramPage + "=") < 0) {
+
+          return url + (url.split('?')[1] ? '&' : '?') + settings.paramPage + "=" + page;
+
+        }
+
+        //else {
+
+        var regex = new RegExp("(" + settings.paramPage + "=).*?((&)(.)*)?$");
+
+        return url.replace(regex, '$1' + page + '$2');
+
+        //}
+
+      }
+
     }
-  }
+  };
 
   // End of closure.
 })(jQuery);
