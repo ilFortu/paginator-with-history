@@ -2,7 +2,7 @@
  *
  * Never ending scroll with history
  *
- Version: 0.0.4
+ Version: 0.0.5
  Author: Antonio Fortunato
  Website: https://github.com/ilFortu/paginator-with-history
  Docs: https://github.com/ilFortu/paginator-with-history
@@ -12,7 +12,7 @@
 // Create closure.
 
 (function ($) {
-  
+
   // Plugin definition.
   $.fn.paginatorHistory = function (options) {
 
