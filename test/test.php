@@ -15,7 +15,7 @@ $pageNext = $pageCurrent + 1;
 
 ?>
 
-<h1>Test</h1>
+<h1 style="height: 200px">Test</h1>
 
 
 <div class="container">
@@ -36,7 +36,7 @@ $pageNext = $pageCurrent + 1;
 
 
         <?php
-        for ($i = 0; $i < 6; $i++) {
+        for ($i = 0; $i < 9; $i++) {
           ?>
 
 

@@ -2,7 +2,7 @@
  *
  * Never ending scroll with history
  *
- Version: 0.0.5
+ Version: 0.0.6
  Author: Antonio Fortunato
  Website: https://github.com/ilFortu/paginator-with-history
  Docs: https://github.com/ilFortu/paginator-with-history
@@ -68,18 +68,18 @@
 
         //  window.scrollTo(0, 200);
 
-        ajaxCall($prev.attr("data-page"), false);
+        ajaxCall($prev.attr("data-page"), false, true);
       }
 
 
       //click item link
-      //var linkItem = ".jph-item-link";
-      //this.on("click", linkItem, function (evt) {
-      //  //evt.preventDefault();
-      //
-      //  changeLocation($(this).parents(listItemsPageClass).attr("data-page"), $(this).parents(item).attr("id"));
-      //
-      //});
+      var linkItem = ".jph-item-link";
+      this.on("click", linkItem, function (evt) {
+        //evt.preventDefault();
+
+        changeLocation($(this).parents(listItemsPageClass).attr("data-page"), $(this).parents(item).attr("id"));
+
+      });
 
 
       $(window).scroll(function () {
@@ -141,12 +141,11 @@
 
         });
       });
-
       //at start simulate scroll
       $(window).trigger("scroll");
 
 
-      function ajaxCall(page, isNext) {
+      function ajaxCall(page, isNext, prevLoadonStart) {
 
         page = parseInt(page);
 
@@ -187,31 +186,31 @@
               } else {
                 //isPrev
 
-                //var scrollTop = document.documentElement.scrollTop;
-                //
-                //console.log(document.documentElement.scrollTop);
-                //console.log(window.pageYOffset);
-                //console.log(document.documentElement.clientTop);
 
                 $paginatorListContainer.prepend(newPageBlock);
 
 
-                var scrollTop = window.pageYOffset;
+                var scrollTo = 0;
 
-                var scrollTo = $paginatorListContainer.find(listItemsPageClass + "[data-page='" + currentPage + "']").position().top;
 
-                if (scrollTop != 0) {
+                if (prevLoadonStart) {
+
+                  var hash = window.location.hash.substring(1);
+
+                  var anchor = hash != "" ? " #" + hash : "";
+
+                  scrollTo = $paginatorListContainer.find(listItemsPageClass + "[data-page='" + currentPage + "']" + anchor).position().top;
+                }
+
+                else if (window.pageYOffset != 0) {
+
 
                   var heightPrevPage = $paginatorListContainer.find(listItemsPageClass + "[data-page='" + page + "']").height();
                   scrollTo = window.pageYOffset + heightPrevPage;
                 }
 
-
                 // adjust scroll to the current page
                 window.scrollTo(0, scrollTo);
-
-
-                console.log(scrollTo);
 
 
                 if (page > 1) {
