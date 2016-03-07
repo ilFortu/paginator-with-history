@@ -87,11 +87,27 @@
       //------ CLICK ITEM END --------
 
 
+      (function () {
+        var previousScroll = 0;
+
+        $(window).scroll(function () {
+          var currentScroll = $(this).scrollTop();
+          if (currentScroll > previousScroll) {
+            moveWindow('down');
+          } else {
+            moveWindow('up');
+          }
+          previousScroll = currentScroll;
+        });
+      }());
+
+
       //----------- MOUSE WHEEL EVENT-----------------
       // IE9, Chrome, Safari, Opera
       window.addEventListener("mousewheel", mouseWheel, false);
       // Firefox
       window.addEventListener("DOMMouseScroll", mouseWheel, false);
+
       function mouseWheel() {
 
 
@@ -99,13 +115,17 @@
         var e = window.event || e; // old IE support
         var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
 
-        console.log(delta); //1 up, -1 down
 
-        if (delta == 1) {
+        switch (delta) {
 
-
-        } else if (delta == -1) {
-
+          case 1:
+            moveWindow('up');
+            break;
+          case -1:
+            moveWindow('down');
+            break;
+          default:
+            break;
         }
 
       }
@@ -113,24 +133,72 @@
       //----------- MOUSE WHEEL EVENT END -----------------
 
       //----------- KEYBOARD UD AND DOWN EVENT-----------------
-      document.onkeydown = function (e) {
-        switch (e.keyCode) {
+      /* document.onkeydown = function (e) {
+       switch (e.keyCode) {
 
-          case 38:
-            console.log('up');
-            break;
-          case 40:
-            console.log('down');
-            break;
-        }
-      };
+       case 38:
+       console.log('up');
+       break;
+       case 40:
+       console.log('down');
+       break;
+       default:
+       break;
+       }
+       };*/
       //----------- KEYBOARD UD AND DOWN EVENT END-----------------
 
-      var lastY = $(window).scrollTop();
-      window.ontouchmove = function (e) {
+
+      //----------- TOUCH MOVE EVENT-----------------
+      var swipeFunc = {
+        touches: {
+          "touchstart": {"y": -1},
+          "touchmove": {"y": -1},
+          "touchend": false,
+          "direction": "undetermined"
+        },
+        touchHandler: function (event) {
+          var touch;
 
 
+          if (typeof event !== 'undefined') {
+            //event.preventDefault();
+
+
+            if (typeof event.touches !== 'undefined') {
+              touch = event.touches[0];
+
+
+              switch (event.type) {
+                case 'touchstart':
+                case 'touchmove':
+                  swipeFunc.touches[event.type].y = touch.pageY;
+                  break;
+
+                case 'touchend':
+                  swipeFunc.touches[event.type] = true;
+
+
+                  if (swipeFunc.touches.touchstart.y > -1 && swipeFunc.touches.touchmove.y > -1) {
+                    swipeFunc.touches.direction = swipeFunc.touches.touchstart.y < swipeFunc.touches.touchmove.y ? "up" : "down";
+
+                    // DO STUFF HERE
+                    moveWindow(swipeFunc.touches.direction);
+                  }
+                default:
+                  break;
+              }
+            }
+          }
+        },
+        init: function () {
+          document.addEventListener('touchstart', swipeFunc.touchHandler, false);
+          document.addEventListener('touchmove', swipeFunc.touchHandler, false);
+          document.addEventListener('touchend', swipeFunc.touchHandler, false);
+        }
       };
+      swipeFunc.init();
+      //----------- TOUCH MOVE EVENT END-----------------
 
 
       // $(window).scroll(function () {
@@ -147,7 +215,7 @@
 
 
         //next page..
-        if ($next != null && !loadingPage && $next.position().top - settings.offsetCallPage < scrollPos + $(window).height()) {
+        if (direction == 'down' && $next != null && !loadingPage && $next.position().top - settings.offsetCallPage < scrollPos + $(window).height()) {
 
           loadingPage = true;
           console.log("NEXT");
@@ -157,7 +225,7 @@
 
 
         //prev page
-        if ($prev != null && !loadingPage && scrollPos - $prev.position().top < settings.offsetCallPage) {
+        else if (direction == 'up' && $prev != null && !loadingPage && scrollPos - $prev.position().top < settings.offsetCallPage) {
 
 
           loadingPage = true;
@@ -200,7 +268,7 @@
       //$(window).trigger("scroll");
 
 
-      function ajaxCall(page, isNext, prevLoadonStart) {
+      function ajaxCall(page, isNext, prevLoadOnStart) {
 
         page = parseInt(page);
 
@@ -248,7 +316,7 @@
                 var scrollTo = 0;
 
 
-                if (prevLoadonStart) {
+                if (prevLoadOnStart) {
 
                   var $currentBlock = $paginatorListContainer.find(listItemsPageClass + "[data-page='" + currentPage + "']");
                   var hash = window.location.hash.substring(1);
@@ -300,6 +368,7 @@
             removeLink = true;
           }
 
+          //remove the link from the page
           if (removeLink) {
             if (isNext) {
 
@@ -317,12 +386,12 @@
 
           loadingPage = false;
 
-          if (!isNext && page > 0) {
+          /*if (!isNext && page > 0) {
 
             console.log("trigger scroll");
 
             //    $(window).trigger("scroll");
-          }
+          }*/
 
           // Here's the callback:
           settings.ajaxDoneAfterItemsInPage.call(this);
