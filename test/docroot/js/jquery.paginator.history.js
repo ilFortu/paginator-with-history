@@ -72,7 +72,7 @@
         loadingPage = true;
         //console.log("PREV");
         //  window.scrollTo(0, 200);
-        
+
         $(window).load(function () {
           ajaxCall($prev.attr("data-page"), false, true);
 
