@@ -2,7 +2,7 @@
  *
  * Never ending scroll with history
  *
- Version: 0.0.6
+ Version: 0.0.7
  Author: Antonio Fortunato
  Website: https://github.com/ilFortu/paginator-with-history
  Docs: https://github.com/ilFortu/paginator-with-history
@@ -22,6 +22,7 @@
 
       paramPage: 'page',
       offsetCallPage: 500,
+      offsetAnchor: -200,
       //selector that identify the container of the items for the ajax call
       selectorContainer: null,
       blockPageHtmlElement: 'div',
@@ -72,26 +73,22 @@
         //console.log("PREV");
         //  window.scrollTo(0, 200);
 
-
-        $(window).on('beforeunload', function() {
-          console.log("unload");
-          $(window).scrollTop(0);
+        $(window).load(function () {
+          ajaxCall($prev.attr("data-page"), false, true);
 
         });
-
-        ajaxCall($prev.attr("data-page"), false, true);
       }
       //------- CALL PREV PAGE AT START END -------------
 
 
       //------ CLICK ITEM --------
-      /*  var linkItem = ".jph-item-link";
-       this.on("click", linkItem, function (evt) {
-       //evt.preventDefault();
+      var linkItem = ".jph-item-link";
+      this.on("click", linkItem, function (evt) {
+        //evt.preventDefault();
 
-       changeLocation($(this).parents(listItemsPageClass).attr("data-page"), $(this).parents(item).attr("id"));
+        changeLocation($(this).parents(listItemsPageClass).attr("data-page"), $(this).parents(item).attr("id")); //
 
-       });*/
+      });
       //------ CLICK ITEM END --------
 
       //----------- MOUSE SCROLL EVENT -----------------
@@ -225,19 +222,19 @@
 
           //console.log(scrollPos + $(window).height());
 
-          console.log(direction);
+          //console.log(direction);
           //next page..
-          if (direction == 'down' && $next != null && $next.position().top - settings.offsetCallPage < scrollPos + $(window).height()) {
+          if (direction == 'down' && $next != null && $next.offset().top - settings.offsetCallPage < scrollPos + $(window).height()) {
 
             loadingPage = true;
-            console.log("NEXT");
+           // console.log("NEXT");
 
             ajaxCall($next.attr("data-page"), true);
           }
 
 
           //prev page
-          else if (direction == 'up' && $prev != null && scrollPos - $prev.position().top < settings.offsetCallPage) {
+          else if (direction == 'up' && $prev != null && scrollPos - $prev.offset().top < settings.offsetCallPage) {
 
 
             loadingPage = true;
@@ -255,8 +252,8 @@
           $(listItemsPageClass).each(function () {
 
 
-            var top = $(this).position().top;
-            var bottom = $(this).position().top + $(this).height();
+            var top = $(this).offset().top;
+            var bottom = $(this).offset().top + $(this).height();
 
 
             //  console.log(scrollHalfPosition +" || "+ top +" / "+ bottom);
@@ -335,18 +332,13 @@
                   var hash = window.location.hash.substring(1);
 
 
-
-
                   if (hash != "" && $currentBlock.find("#" + hash).length > 0) {
 
                     $currentBlock = $currentBlock.find("#" + hash);
                   }
 
 
-                  scrollTo = $currentBlock.position().top;
-
-
-                  console.log("scrollTo on start ", scrollTo);
+                  scrollTo = $currentBlock.offset().top + settings.offsetAnchor;
 
 
                   $paginatorListContainer.removeClass("jph-hide");
@@ -361,7 +353,7 @@
 
                 // adjust scroll to the current page
                 window.scrollTo(0, scrollTo);
-                console.log("page scroll ", scrollTo);
+             //   console.log("page scroll ", scrollTo);
 
 
                 if (page > 1) {
@@ -407,13 +399,6 @@
 
 
           loadingPage = false;
-
-          /*if (!isNext && page > 0) {
-
-           console.log("trigger scroll");
-
-           //    $(window).trigger("scroll");
-           }*/
 
           // Here's the callback:
           settings.ajaxDoneAfterItemsInPage.call(this);

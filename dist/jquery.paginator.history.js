@@ -2,7 +2,7 @@
  *
  * Never ending scroll with history
  *
- Version: 0.0.6
+ Version: 0.0.7
  Author: Antonio Fortunato
  Website: https://github.com/ilFortu/paginator-with-history
  Docs: https://github.com/ilFortu/paginator-with-history
@@ -16,11 +16,13 @@
   // Plugin definition.
   $.fn.paginatorHistory = function (options) {
 
+
     //default settings
     var defaults = {
 
       paramPage: 'page',
       offsetCallPage: 500,
+      offsetAnchor: -200,
       //selector that identify the container of the items for the ajax call
       selectorContainer: null,
       blockPageHtmlElement: 'div',
@@ -70,8 +72,11 @@
         loadingPage = true;
         //console.log("PREV");
         //  window.scrollTo(0, 200);
+        
+        $(window).load(function () {
+          ajaxCall($prev.attr("data-page"), false, true);
 
-        ajaxCall($prev.attr("data-page"), false, true);
+        });
       }
       //------- CALL PREV PAGE AT START END -------------
 
@@ -81,12 +86,12 @@
       this.on("click", linkItem, function (evt) {
         //evt.preventDefault();
 
-        changeLocation($(this).parents(listItemsPageClass).attr("data-page"), $(this).parents(item).attr("id"));
+        changeLocation($(this).parents(listItemsPageClass).attr("data-page"), $(this).parents(item).attr("id")); //
 
       });
       //------ CLICK ITEM END --------
 
-
+      //----------- MOUSE SCROLL EVENT -----------------
       (function () {
         var previousScroll = 0;
 
@@ -100,6 +105,7 @@
           previousScroll = currentScroll;
         });
       }());
+      //----------- MOUSE SCROLL EVENT END -----------------
 
 
       //----------- MOUSE WHEEL EVENT-----------------
@@ -205,62 +211,66 @@
       function moveWindow(direction) {
 
 
+        //console.log("scrolling");
 
-        // console.log("scrolling");
-
-        // handle scroll events to update content
-        var scrollPos = $(window).scrollTop();
-
-        //console.log(scrollPos + $(window).height());
+        if (!loadingPage) {
 
 
-        //next page..
-        if (direction == 'down' && $next != null && !loadingPage && $next.position().top - settings.offsetCallPage < scrollPos + $(window).height()) {
 
-          loadingPage = true;
-          console.log("NEXT");
+          // handle scroll events to update content
+          var scrollPos = $(window).scrollTop();
 
-          ajaxCall($next.attr("data-page"), true);
-        }
+          //console.log(scrollPos + $(window).height());
 
+          //console.log(direction);
+          //next page..
+          if (direction == 'down' && $next != null && $next.offset().top - settings.offsetCallPage < scrollPos + $(window).height()) {
 
-        //prev page
-        else if (direction == 'up' && $prev != null && !loadingPage && scrollPos - $prev.position().top < settings.offsetCallPage) {
+            loadingPage = true;
+           // console.log("NEXT");
 
-
-          loadingPage = true;
-
-          ajaxCall($prev.attr("data-page"), false);
+            ajaxCall($next.attr("data-page"), true);
+          }
 
 
-        }
+          //prev page
+          else if (direction == 'up' && $prev != null && scrollPos - $prev.offset().top < settings.offsetCallPage) {
 
 
-        //half window
-        var scrollHalfPosition = $(window).scrollTop() + ($(window).height() / 2);
+            loadingPage = true;
 
+            ajaxCall($prev.attr("data-page"), false);
 
-        $(listItemsPageClass).each(function () {
-
-
-          var top = $(this).position().top;
-          var bottom = $(this).position().top + $(this).height();
-
-
-          //  console.log(scrollHalfPosition +" || "+ top +" / "+ bottom);
-
-          if ($(this).attr("data-page") != currentPage && top <= scrollHalfPosition && scrollHalfPosition <= bottom) {
-
-
-            //console.log($(this).position().top +" |||| "+ scrollHalfPosition +" || "+ top +" / "+ bottom);
-
-            currentPage = $(this).attr("data-page");
-            changeLocation(currentPage, null);
 
           }
 
 
-        });
+          //half window
+          var scrollHalfPosition = $(window).scrollTop() + ($(window).height() / 2);
+
+
+          $(listItemsPageClass).each(function () {
+
+
+            var top = $(this).offset().top;
+            var bottom = $(this).offset().top + $(this).height();
+
+
+            //  console.log(scrollHalfPosition +" || "+ top +" / "+ bottom);
+
+            if ($(this).attr("data-page") != currentPage && top <= scrollHalfPosition && scrollHalfPosition <= bottom) {
+
+
+              //console.log($(this).position().top +" |||| "+ scrollHalfPosition +" || "+ top +" / "+ bottom);
+
+              currentPage = $(this).attr("data-page");
+              changeLocation(currentPage, null);
+
+            }
+
+
+          });
+        }
       }
 
       //     });
@@ -328,7 +338,10 @@
                   }
 
 
-                  scrollTo = $currentBlock.position().top;
+                  scrollTo = $currentBlock.offset().top + settings.offsetAnchor;
+
+
+                  $paginatorListContainer.removeClass("jph-hide");
                 }
 
                 else if (window.pageYOffset != 0) {
@@ -340,6 +353,7 @@
 
                 // adjust scroll to the current page
                 window.scrollTo(0, scrollTo);
+             //   console.log("page scroll ", scrollTo);
 
 
                 if (page > 1) {
@@ -385,13 +399,6 @@
 
 
           loadingPage = false;
-
-          /*if (!isNext && page > 0) {
-
-            console.log("trigger scroll");
-
-            //    $(window).trigger("scroll");
-          }*/
 
           // Here's the callback:
           settings.ajaxDoneAfterItemsInPage.call(this);
