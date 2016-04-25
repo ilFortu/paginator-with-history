@@ -11,6 +11,7 @@ $(document).ready(function () {
 
 
     selectorContainer: "#test-container",
+   // disableHistory: true,
 
 
     ajaxDoneAfterItemsInPage: function () {

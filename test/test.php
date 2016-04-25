@@ -21,7 +21,7 @@ $pageNext = $pageCurrent + 1;
 <div class="container">
 
 
-  <div class="jph-history" data-jph-ajax-url="partials/content.php?testParamExtra=12&otherTest=hello&page=1">
+  <div class="jph-history" data-jph-ajax-url="partials/content.php">
 
     <?php if ($pagePrev > 0) { ?>
 

@@ -1,1 +1,1 @@
-{"version":3,"sources":["../src/js/main.js"],"names":["$","document","ready","paginatorHistory","selectorContainer","ajaxDoneAfterItemsInPage"],"mappings":"AAMAA,EAAEC,UAAUC,MAAM,WAGhBF,EAAE,gBAAgBG,kBAGhBC,oBAAmB,kBAGnBC,2BAA0B","file":"main.js"}
+{"version":3,"sources":["../src/js/main.js"],"names":["$","document","ready","paginatorHistory","selectorContainer","ajaxDoneAfterItemsInPage"],"mappings":"AAMAA,EAAEC,UAAUC,MAAM,WAGhBF,EAAE,gBAAgBG,kBAGhBC,oBAAmB,kBAInBC,2BAA0B","file":"main.js"}
