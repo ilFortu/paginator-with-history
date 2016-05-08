@@ -19,16 +19,10 @@
 (function ($) {
   // This function accepts one argument.
 
-
-  // This is a 'function', simply, but we know that
-  // we will create an 'object' using 'new Accordion'
   function Paginator(el, options) {
 
     var $el = $(el);
 
-    // add all properties to the 'this'.
-    // in this way we can access to these properties
-    // from all prototype's functions
     this.$el = $el;
 
     this.$prev = this.$el.find(".jph-prev").length > 0 ? this.$el.find(".jph-prev") : null;
