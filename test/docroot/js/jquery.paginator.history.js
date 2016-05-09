@@ -66,13 +66,18 @@
       this.listItemsPageClass = "." + this.listItemsPage;
 
 
-      this.currentPage = this.$el.find(this.listItemsPageClass).data("page");
+      this.$currentPage = this.$el.find(this.listItemsPageClass);
+      this.currentPage = this.$currentPage.data("page");
 
       this.loadingPage = false;
 
 
+      this.arrayPagePositions = new Array();
+
+
       this.init();
       this.moveEvents();
+
 
     }
 
@@ -156,19 +161,21 @@
     //----------- MOUSE WHEEL EVENT END -----------------
 
     //----------- KEYBOARD UD AND DOWN EVENT-----------------
-    /* document.onkeydown = function (e) {
-     switch (e.keyCode) {
+    document.onkeydown = function (e) {
 
-     case 38:
-     console.log('up');
-     break;
-     case 40:
-     console.log('down');
-     break;
-     default:
-     break;
-     }
-     };*/
+
+      switch (e.keyCode) {
+
+        case 38:
+          _this.moveWindow('up');
+          break;
+        case 40:
+          _this.moveWindow('down');
+          break;
+        default:
+          break;
+      }
+    };
     //----------- KEYBOARD UD AND DOWN EVENT END-----------------
 
 
@@ -268,7 +275,72 @@
       /*   var currentElement = document.elementFromPoint($paginatorListContainer.width() / 2, screen.height / 2);
        changeLocation($(currentElement).parents(listItemsPageClass).data("page"), null);*/
 
+
+      this.moveWindowChangeCurrentPage();
     }
+  };
+
+
+  Paginator.prototype.moveWindowChangeCurrentPage = function () {
+
+
+    var _this = this;
+
+
+    this.updateArrayPagePosition(_this.currentPage - 1);
+    this.updateArrayPagePosition(_this.currentPage);
+    this.updateArrayPagePosition(_this.currentPage + 1);
+
+/*
+    //half window
+    var scrollHalfPosition = $(window).scrollTop() + ($(window).height() / 2);
+
+
+    $(listItemsPageClass).each(function () {
+
+
+      var top = $(this).position().top;
+      var bottom = $(this).position().top + $(this).height();
+
+
+      //  console.log(scrollHalfPosition +" || "+ top +" / "+ bottom);
+
+      if ($(this).attr("data-page") != currentPage && top <= scrollHalfPosition && scrollHalfPosition <= bottom) {
+
+
+        //console.log($(this).position().top +" |||| "+ scrollHalfPosition +" || "+ top +" / "+ bottom);
+
+        currentPage = $(this).attr("data-page");
+        changeLocation(currentPage, null);
+
+      }
+
+
+    });
+    */
+
+  };
+
+
+  Paginator.prototype.updateArrayPagePosition = function (page) {
+
+
+    var $page = this.$el.find(this.listItemsPageClass + "[data-page='" + page + "']");
+
+    if ($page.length > 0) {
+      var currentPagePos = {
+        page: page,
+        top: $page.find(this.settings.item).first().offset().top,
+        bottom: $page.find(this.settings.item).last().offset().top + $page.find(this.settings.item).last().outerHeight()
+      };
+
+
+      this.arrayPagePositions[page] = currentPagePos;
+
+
+      console.log(this.arrayPagePositions);
+    }
+
   };
 
 
