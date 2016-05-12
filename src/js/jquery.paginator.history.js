@@ -473,10 +473,10 @@
   };
 
 
-  Paginator.prototype.changeLocation = function (page, itemId) {
+  Paginator.prototype.changeLocation = function (pageNumber, itemId) {
 
 
-    var newLocation = this.setUrlwithPagination(window.location.href, page);
+    var newLocation = this.setUrlwithPagination(window.location.href, pageNumber);
 
     if (typeof itemId !== 'undefined' && itemId != null) {
 
@@ -488,15 +488,15 @@
   };
 
 
-  Paginator.prototype.setUrlwithPagination = function (url, page) {
+  Paginator.prototype.setUrlwithPagination = function (url, pageNumber) {
 
 
-    if (typeof page === 'number' && page % 1 === 0) {
+    if (typeof pageNumber === 'number' && pageNumber % 1 === 0) {
 
       //if there isn't the param page in the url
       if (url.indexOf(this.settings.paramPage + "=") < 0) {
 
-        return url + (url.split('?')[1] ? '&' : '?') + this.settings.paramPage + "=" + page;
+        return url + (url.split('?')[1] ? '&' : '?') + this.settings.paramPage + "=" + pageNumber;
 
       }
 
@@ -504,7 +504,7 @@
 
       var regex = new RegExp("(" + this.settings.paramPage + "=).*?((&)(.)*)?$");
 
-      return url.replace(regex, '$1' + page + '$2');
+      return url.replace(regex, '$1' + pageNumber + '$2');
 
       //}
 
