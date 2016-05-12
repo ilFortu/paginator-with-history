@@ -111,15 +111,15 @@
       this.$el.on("click", this.settings.linkItem, function (evt) {
         //evt.preventDefault();
 
-        console.log(this.$el.parents(this.listItemsPageClass).attr("data-page"));
+        console.log($(this).parents(_this.listItemsPageClass).attr("data-page"));
 
-        this.changeLocation(parseInt(this.$el.parents(this.listItemsPageClass).attr("data-page")), this.$el.parents(this.settings.item).attr("id")); //
+        _this.changeLocation(parseInt($(this).parents(_this.listItemsPageClass).attr("data-page")), $(this).parents(_this.settings.item).attr("id")); //
 
       });
       //------ CLICK ITEM END --------
     }
 
-
+    this.updateArrayPagePosition(_this.currentPage);
   };
 
 
@@ -286,10 +286,15 @@
 
     var _this = this;
 
+    if($(window).scrollTop() + ($(window).height() / 2) < this.arrayPagePositions[_this.currentPage].top) {
+      _this.currentPage --;
+      this.updatePagePosition(_this.currentPage);
+    }
+    else if($(window).scrollTop() + ($(window).height() / 2) > this.arrayPagePositions[_this.currentPage].bottom) {
+      _this.currentPage ++;
+      this.updatePagePosition(_this.currentPage);
+    }
 
-    this.updateArrayPagePosition(_this.currentPage - 1);
-    this.updateArrayPagePosition(_this.currentPage);
-    this.updateArrayPagePosition(_this.currentPage + 1);
 
 /*
     //half window
@@ -321,6 +326,19 @@
 
   };
 
+  Paginator.prototype.updatePagePosition = function(page) {
+    var _this = this;
+
+    this.arrayPagePositions = [];
+
+    this.updateArrayPagePosition(page - 1);
+    this.updateArrayPagePosition(page);
+    this.updateArrayPagePosition(page + 1);
+
+    this.changeLocation(page, null); //
+
+    console.log(this.arrayPagePositions);
+  }
 
   Paginator.prototype.updateArrayPagePosition = function (page) {
 
@@ -336,9 +354,6 @@
 
 
       this.arrayPagePositions[page] = currentPagePos;
-
-
-      console.log(this.arrayPagePositions);
     }
 
   };
@@ -465,6 +480,8 @@
 
 
       _this.loadingPage = false;
+
+      _this.updatePagePosition(_this.currentPage);
 
       // Here's the callback:
       _this.settings.ajaxDoneAfterItemsInPage.call(this);
