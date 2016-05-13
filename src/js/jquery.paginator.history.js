@@ -46,6 +46,7 @@
         blockPageHtmlElement: 'div',
         item: '.jph-item',
         disableHistory: false,
+        disableHistoryOnMove: false,
 
         ajaxDoneBeforeItemsInPage: function () {
         },
@@ -118,8 +119,8 @@
       });
       //------ CLICK ITEM END --------
     }
-
-    this.updateArrayPagePosition(_this.currentPage);
+    if(!this.settings.disableHistory && !this.settings.disableHistoryOnMove)
+      this.updateArrayPagePosition(_this.currentPage);
   };
 
 
@@ -286,14 +287,15 @@
 
     var _this = this;
 
-    if($(window).scrollTop() + ($(window).height() / 2) < this.arrayPagePositions[_this.currentPage].top) {
-      _this.currentPage --;
-      this.updatePagePosition(_this.currentPage);
-    }
-    else if($(window).scrollTop() + ($(window).height() / 2) > this.arrayPagePositions[_this.currentPage].bottom) {
-      _this.currentPage ++;
-      this.updatePagePosition(_this.currentPage);
-    }
+    if(!this.settings.disableHistory && !this.settings.disableHistoryOnMove)
+      if($(window).scrollTop() + ($(window).height() / 2) < this.arrayPagePositions[_this.currentPage].top) {
+        _this.currentPage --;
+        this.updatePagePosition(_this.currentPage);
+      }
+      else if($(window).scrollTop() + ($(window).height() / 2) > this.arrayPagePositions[_this.currentPage].bottom) {
+        _this.currentPage ++;
+        this.updatePagePosition(_this.currentPage);
+      }
 
 
 /*
@@ -327,7 +329,6 @@
   };
 
   Paginator.prototype.updatePagePosition = function(page) {
-    var _this = this;
 
     this.arrayPagePositions = [];
 
@@ -481,7 +482,8 @@
 
       _this.loadingPage = false;
 
-      _this.updatePagePosition(_this.currentPage);
+      if(!_this.settings.disableHistory && !_this.settings.disableHistoryOnMove)
+        _this.updatePagePosition(_this.currentPage);
 
       // Here's the callback:
       _this.settings.ajaxDoneAfterItemsInPage.call(this);
