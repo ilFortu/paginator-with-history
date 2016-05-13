@@ -1,2 +1,2 @@
-$(document).ready(function(){$(".jph-history").paginatorHistory({"selectorContainer":"#test-container","ajaxDoneAfterItemsInPage":function(){}})});
+$(document).ready(function(){$(".jph-history").jqueryPaginatorHistory({"selectorContainer":"#test-container","ajaxDoneAfterItemsInPage":function(){}})});
 //# sourceMappingURL=main.js.map

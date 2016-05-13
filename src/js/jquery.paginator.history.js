@@ -16,529 +16,530 @@
  * This is the best practice!!!!!
  * Each js file should be declared with a 'scope' like below
  */
-(function ($) {
-  // This function accepts one argument.
 
-  function Paginator(el, options) {
+// This function accepts one argument.
 
-    var $el = $(el);
+function JqueryPaginatorHistory(el, options) {
 
-    this.$el = $el;
+  var $el = $(el);
 
-    this.$prev = this.$el.find(".jph-prev").length > 0 ? this.$el.find(".jph-prev") : null;
-    this.$next = this.$el.find(".jph-next").length > 0 ? this.$el.find(".jph-next") : null;
+  this.$el = $el;
 
-
-    //execute the plugin if there is at least one link to prev or next content...
-    if (this.$prev != null || this.$next != null) {
+  this.$prev = this.$el.find(".jph-prev").length > 0 ? this.$el.find(".jph-prev") : null;
+  this.$next = this.$el.find(".jph-next").length > 0 ? this.$el.find(".jph-next") : null;
 
 
-
-      //default settings
-      var defaults = {
-
-        paramPage: 'page',
-        offsetCallPage: 500,
-        offsetAnchor: -200,
-        linkItem: '.jph-item-link',
-        //selector that identify the container of the items for the ajax call
-        selectorContainer: null,
-        blockPageHtmlElement: 'div',
-        item: '.jph-item',
-        disableHistory: false,
-        disableHistoryOnMove: false,
-
-        ajaxDoneBeforeItemsInPage: function () {
-        },
-        ajaxDoneAfterItemsInPage: function () {
-        }
-      };
-
-      this.settings = $.extend({}, defaults, options);
+  //execute the plugin if there is at least one link to prev or next content...
+  if (this.$prev != null || this.$next != null) {
 
 
-      //----- SETTINGS -------
-      this.$paginatorListContainer = this.$el.find(".jph-list-container");
-      this.ajaxUrl = this.$el.data("jph-ajax-url");
-      // ajaxUrl = ajaxUrl + (ajaxUrl.split('?')[1] ? '&' : '?') + settings.paramPage + "=";
+
+    //default settings
+    var defaults = {
+
+      paramPage: 'page',
+      offsetCallPage: 500,
+      offsetAnchor: -200,
+      linkItem: '.jph-item-link',
+      //selector that identify the container of the items for the ajax call
+      selectorContainer: null,
+      blockPageHtmlElement: 'div',
+      item: '.jph-item',
+      disableHistory: false,
+      disableHistoryOnMove: false,
+
+      ajaxDoneBeforeItemsInPage: function () {
+      },
+      ajaxDoneAfterItemsInPage: function () {
+      }
+    };
+
+    this.settings = $.extend({}, defaults, options);
 
 
-      this.listItemsPage = "jph-list-items-page";
-      this.listItemsPageClass = "." + this.listItemsPage;
+    //----- SETTINGS -------
+    this.$paginatorListContainer = this.$el.find(".jph-list-container");
+    this.ajaxUrl = this.$el.data("jph-ajax-url");
+    // ajaxUrl = ajaxUrl + (ajaxUrl.split('?')[1] ? '&' : '?') + settings.paramPage + "=";
 
 
-      this.$currentPage = this.$el.find(this.listItemsPageClass);
-      this.currentPage = this.$currentPage.data("page");
-
-      this.loadingPage = false;
+    this.listItemsPage = "jph-list-items-page";
+    this.listItemsPageClass = "." + this.listItemsPage;
 
 
-      this.arrayPagePositions = new Array();
+    this.$currentPage = this.$el.find(this.listItemsPageClass);
+    this.currentPage = this.$currentPage.data("page");
+
+    this.loadingPage = false;
 
 
-      this.init();
-      this.moveEvents();
+    this.arrayPagePositions = new Array();
 
 
-    }
+    this.init();
+    this.moveEvents();
 
 
   }
 
 
-  Paginator.prototype.init = function () {
-
-    var _this = this;
-
-    if (!this.settings.disableHistory) {
-
-      //------- CALL PREV PAGE AT START -------------
-      //if exists the previous link
-      if (_this.$prev != null && _this.$prev.attr("data-page") > 0) {
-
-        _this.loadingPage = true;
-        //console.log("PREV");
-        //  window.scrollTo(0, 200);
-
-        $(window).load(function () {
-          _this.ajaxCall(_this.$prev.attr("data-page"), false, true);
-
-        });
-      }
-      //------- CALL PREV PAGE AT START END -------------
+}
 
 
-      //------ CLICK ITEM --------
-      this.$el.on("click", this.settings.linkItem, function (evt) {
-        //evt.preventDefault();
+JqueryPaginatorHistory.prototype.init = function () {
 
-        console.log($(this).parents(_this.listItemsPageClass).attr("data-page"));
+  var _this = this;
 
-        _this.changeLocation(parseInt($(this).parents(_this.listItemsPageClass).attr("data-page")), $(this).parents(_this.settings.item).attr("id")); //
+  if (!this.settings.disableHistory) {
+
+    //------- CALL PREV PAGE AT START -------------
+    //if exists the previous link
+    if (_this.$prev != null && _this.$prev.attr("data-page") > 0) {
+
+      _this.loadingPage = true;
+      //console.log("PREV");
+      //  window.scrollTo(0, 200);
+
+      $(window).load(function () {
+        _this.ajaxCall(_this.$prev.attr("data-page"), false, true);
 
       });
-      //------ CLICK ITEM END --------
     }
-    if(!this.settings.disableHistory && !this.settings.disableHistoryOnMove)
-      this.updateArrayPagePosition(_this.currentPage);
-  };
+    //------- CALL PREV PAGE AT START END -------------
 
 
-  Paginator.prototype.moveEvents = function () {
+    //------ CLICK ITEM --------
+    this.$el.on("click", this.settings.linkItem, function (evt) {
+      //evt.preventDefault();
 
-    var _this = this;
+      console.log($(this).parents(_this.listItemsPageClass).attr("data-page"));
 
-    //----------- MOUSE SCROLL EVENT END -----------------
-
-
-    //----------- MOUSE WHEEL EVENT-----------------
-    // IE9, Chrome, Safari, Opera
-    window.addEventListener("mousewheel", mouseWheel, false);
-    // Firefox
-    window.addEventListener("DOMMouseScroll", mouseWheel, false);
-
-    function mouseWheel() {
-
-
-      // cross-browser wheel delta
-      var e = window.event || e; // old IE support
-      var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-
-
-      switch (delta) {
-
-        case 1:
-          _this.moveWindow('up');
-          break;
-        case -1:
-          _this.moveWindow('down');
-          break;
-        default:
-          break;
-      }
-
-    }
-
-    //----------- MOUSE WHEEL EVENT END -----------------
-
-    //----------- KEYBOARD UD AND DOWN EVENT-----------------
-    document.onkeydown = function (e) {
-
-
-      switch (e.keyCode) {
-
-        case 38:
-          _this.moveWindow('up');
-          break;
-        case 40:
-          _this.moveWindow('down');
-          break;
-        default:
-          break;
-      }
-    };
-    //----------- KEYBOARD UD AND DOWN EVENT END-----------------
-
-
-    //----------- TOUCH MOVE EVENT-----------------
-    var swipeFunc = {
-      touches: {
-        "touchstart": {"y": -1},
-        "touchmove": {"y": -1},
-        "touchend": false,
-        "direction": "undetermined"
-      },
-      touchHandler: function (event) {
-        var touch;
-
-
-        if (typeof event !== 'undefined') {
-          //event.preventDefault();
-
-
-          if (typeof event.touches !== 'undefined') {
-            touch = event.touches[0];
-
-
-            switch (event.type) {
-              case 'touchstart':
-              case 'touchmove':
-                swipeFunc.touches[event.type].y = touch.pageY;
-                break;
-
-              case 'touchend':
-                swipeFunc.touches[event.type] = true;
-
-
-                if (swipeFunc.touches.touchstart.y > -1 && swipeFunc.touches.touchmove.y > -1) {
-                  swipeFunc.touches.direction = swipeFunc.touches.touchstart.y < swipeFunc.touches.touchmove.y ? "up" : "down";
-
-                  // DO STUFF HERE
-                  _this.moveWindow(swipeFunc.touches.direction);
-                }
-              default:
-                break;
-            }
-          }
-        }
-      },
-      init: function () {
-        document.addEventListener('touchstart', swipeFunc.touchHandler, false);
-        document.addEventListener('touchmove', swipeFunc.touchHandler, false);
-        document.addEventListener('touchend', swipeFunc.touchHandler, false);
-      }
-    };
-    swipeFunc.init();
-    //----------- TOUCH MOVE EVENT END-----------------
-
-
-  };
-
-
-  Paginator.prototype.moveWindow = function (direction) {
-
-
-    //console.log("scrolling");
-
-    if (!this.loadingPage && (!this.settings.disableHistory || (this.settings.disableHistory && direction == 'down'))) {
-
-
-
-      // handle scroll events to update content
-      var scrollPos = $(window).scrollTop();
-
-      //console.log(scrollPos + $(window).height());
-
-      //console.log(direction);
-      //next page..
-      if (direction == 'down' && this.$next != null && this.$next.offset().top - this.settings.offsetCallPage < scrollPos + $(window).height()) {
-
-        this.loadingPage = true;
-        // console.log("NEXT");
-
-        this.ajaxCall(this.$next.attr("data-page"), true);
-      }
-
-
-      //prev page
-      else if (direction == 'up' && this.$prev != null && scrollPos - this.$prev.offset().top < this.settings.offsetCallPage) {
-
-
-        this.loadingPage = true;
-
-        this.ajaxCall(this.$prev.attr("data-page"), false);
-
-
-      }
-
-
-      //change current page in url
-      /*   var currentElement = document.elementFromPoint($paginatorListContainer.width() / 2, screen.height / 2);
-       changeLocation($(currentElement).parents(listItemsPageClass).data("page"), null);*/
-
-
-      this.moveWindowChangeCurrentPage();
-    }
-  };
-
-
-  Paginator.prototype.moveWindowChangeCurrentPage = function () {
-
-
-    var _this = this;
-
-    if(!this.settings.disableHistory && !this.settings.disableHistoryOnMove)
-      if($(window).scrollTop() + ($(window).height() / 2) < this.arrayPagePositions[_this.currentPage].top) {
-        _this.currentPage --;
-        this.updatePagePosition(_this.currentPage);
-      }
-      else if($(window).scrollTop() + ($(window).height() / 2) > this.arrayPagePositions[_this.currentPage].bottom) {
-        _this.currentPage ++;
-        this.updatePagePosition(_this.currentPage);
-      }
-
-
-/*
-    //half window
-    var scrollHalfPosition = $(window).scrollTop() + ($(window).height() / 2);
-
-
-    $(listItemsPageClass).each(function () {
-
-
-      var top = $(this).position().top;
-      var bottom = $(this).position().top + $(this).height();
-
-
-      //  console.log(scrollHalfPosition +" || "+ top +" / "+ bottom);
-
-      if ($(this).attr("data-page") != currentPage && top <= scrollHalfPosition && scrollHalfPosition <= bottom) {
-
-
-        //console.log($(this).position().top +" |||| "+ scrollHalfPosition +" || "+ top +" / "+ bottom);
-
-        currentPage = $(this).attr("data-page");
-        changeLocation(currentPage, null);
-
-      }
-
+      _this.changeLocation(parseInt($(this).parents(_this.listItemsPageClass).attr("data-page")), $(this).parents(_this.settings.item).attr("id")); //
 
     });
-    */
-
-  };
-
-  Paginator.prototype.updatePagePosition = function(page) {
-
-    this.arrayPagePositions = [];
-
-    this.updateArrayPagePosition(page - 1);
-    this.updateArrayPagePosition(page);
-    this.updateArrayPagePosition(page + 1);
-
-    this.changeLocation(page, null); //
-
-    console.log(this.arrayPagePositions);
+    //------ CLICK ITEM END --------
   }
-
-  Paginator.prototype.updateArrayPagePosition = function (page) {
-
-
-    var $page = this.$el.find(this.listItemsPageClass + "[data-page='" + page + "']");
-
-    if ($page.length > 0) {
-      var currentPagePos = {
-        page: page,
-        top: $page.find(this.settings.item).first().offset().top,
-        bottom: $page.find(this.settings.item).last().offset().top + $page.find(this.settings.item).last().outerHeight()
-      };
+  if (!this.settings.disableHistory && !this.settings.disableHistoryOnMove)
+    this.updateArrayPagePosition(_this.currentPage);
+};
 
 
-      this.arrayPagePositions[page] = currentPagePos;
+JqueryPaginatorHistory.prototype.moveEvents = function () {
+
+  var _this = this;
+
+  //----------- MOUSE SCROLL EVENT END -----------------
+
+
+  //----------- MOUSE WHEEL EVENT-----------------
+  // IE9, Chrome, Safari, Opera
+  window.addEventListener("mousewheel", mouseWheel, false);
+  // Firefox
+  window.addEventListener("DOMMouseScroll", mouseWheel, false);
+
+  function mouseWheel() {
+
+
+    // cross-browser wheel delta
+    var e = window.event || e; // old IE support
+    var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+
+
+    switch (delta) {
+
+      case 1:
+        _this.moveWindow('up');
+        break;
+      case -1:
+        _this.moveWindow('down');
+        break;
+      default:
+        break;
     }
 
+  }
+
+  //----------- MOUSE WHEEL EVENT END -----------------
+
+  //----------- KEYBOARD UD AND DOWN EVENT-----------------
+  document.onkeydown = function (e) {
+
+
+    switch (e.keyCode) {
+
+      case 38:
+        _this.moveWindow('up');
+        break;
+      case 40:
+        _this.moveWindow('down');
+        break;
+      default:
+        break;
+    }
   };
+  //----------- KEYBOARD UD AND DOWN EVENT END-----------------
 
 
-  Paginator.prototype.ajaxCall = function (page, isNext, prevLoadOnStart) {
-
-    var page = parseInt(page);
-
-    var _this = this;
-
-    $.ajax({
-      url: _this.setUrlwithPagination(_this.ajaxUrl, page),
-      context: document.body
-    }).done(function (content) {
-
-      // Here's the callback:
-      _this.settings.ajaxDoneBeforeItemsInPage.call(this);
+  //----------- TOUCH MOVE EVENT-----------------
+  var swipeFunc = {
+    touches: {
+      "touchstart": {"y": -1},
+      "touchmove": {"y": -1},
+      "touchend": false,
+      "direction": "undetermined"
+    },
+    touchHandler: function (event) {
+      var touch;
 
 
-      var html = content;
-      var removeLink = false;
+      if (typeof event !== 'undefined') {
+        //event.preventDefault();
 
-      if (content != null && content != "") {
 
-        if (_this.settings.selectorContainer != null) {
+        if (typeof event.touches !== 'undefined') {
+          touch = event.touches[0];
 
-          html = $(content).find(_this.settings.selectorContainer).html();
+
+          switch (event.type) {
+            case 'touchstart':
+            case 'touchmove':
+              swipeFunc.touches[event.type].y = touch.pageY;
+              break;
+
+            case 'touchend':
+              swipeFunc.touches[event.type] = true;
+
+
+              if (swipeFunc.touches.touchstart.y > -1 && swipeFunc.touches.touchmove.y > -1) {
+                swipeFunc.touches.direction = swipeFunc.touches.touchstart.y < swipeFunc.touches.touchmove.y ? "up" : "down";
+
+                // DO STUFF HERE
+                _this.moveWindow(swipeFunc.touches.direction);
+              }
+            default:
+              break;
+          }
         }
+      }
+    },
+    init: function () {
+      document.addEventListener('touchstart', swipeFunc.touchHandler, false);
+      document.addEventListener('touchmove', swipeFunc.touchHandler, false);
+      document.addEventListener('touchend', swipeFunc.touchHandler, false);
+    }
+  };
+  swipeFunc.init();
+  //----------- TOUCH MOVE EVENT END-----------------
 
-        if (typeof html !== 'undefined' && html != "") {
+
+};
 
 
-          var newPageBlock = "<" + _this.settings.blockPageHtmlElement + " class='jph-new-page " + _this.listItemsPage + "' data-page='" + page + "'>" + html + "</" + _this.settings.blockPageHtmlElement + ">";
+JqueryPaginatorHistory.prototype.moveWindow = function (direction) {
 
-          if (isNext) {
 
-            _this.$paginatorListContainer.append($(newPageBlock).addClass("jph-appended"));
+  //console.log("scrolling");
 
-            page++;
+  if (!this.loadingPage && (!this.settings.disableHistory || (this.settings.disableHistory && direction == 'down'))) {
 
-            _this.$next.attr("data-page", page);
+
+
+    // handle scroll events to update content
+    var scrollPos = $(window).scrollTop();
+
+    //console.log(scrollPos + $(window).height());
+
+    //console.log(direction);
+    //next page..
+    if (direction == 'down' && this.$next != null && this.$next.offset().top - this.settings.offsetCallPage < scrollPos + $(window).height()) {
+
+      this.loadingPage = true;
+      // console.log("NEXT");
+
+      this.ajaxCall(this.$next.attr("data-page"), true);
+    }
+
+
+    //prev page
+    else if (direction == 'up' && this.$prev != null && scrollPos - this.$prev.offset().top < this.settings.offsetCallPage) {
+
+
+      this.loadingPage = true;
+
+      this.ajaxCall(this.$prev.attr("data-page"), false);
+
+
+    }
+
+
+    //change current page in url
+    /*   var currentElement = document.elementFromPoint($paginatorListContainer.width() / 2, screen.height / 2);
+     changeLocation($(currentElement).parents(listItemsPageClass).data("page"), null);*/
+
+
+    this.moveWindowChangeCurrentPage();
+  }
+};
+
+
+JqueryPaginatorHistory.prototype.moveWindowChangeCurrentPage = function () {
+
+
+  var _this = this;
+
+  if (!this.settings.disableHistory && !this.settings.disableHistoryOnMove)
+    if ($(window).scrollTop() + ($(window).height() / 2) < this.arrayPagePositions[_this.currentPage].top) {
+      _this.currentPage--;
+      this.updatePagePosition(_this.currentPage);
+    }
+    else if ($(window).scrollTop() + ($(window).height() / 2) > this.arrayPagePositions[_this.currentPage].bottom) {
+      _this.currentPage++;
+      this.updatePagePosition(_this.currentPage);
+    }
+
+
+  /*
+   //half window
+   var scrollHalfPosition = $(window).scrollTop() + ($(window).height() / 2);
+
+
+   $(listItemsPageClass).each(function () {
+
+
+   var top = $(this).position().top;
+   var bottom = $(this).position().top + $(this).height();
+
+
+   //  console.log(scrollHalfPosition +" || "+ top +" / "+ bottom);
+
+   if ($(this).attr("data-page") != currentPage && top <= scrollHalfPosition && scrollHalfPosition <= bottom) {
+
+
+   //console.log($(this).position().top +" |||| "+ scrollHalfPosition +" || "+ top +" / "+ bottom);
+
+   currentPage = $(this).attr("data-page");
+   changeLocation(currentPage, null);
+
+   }
+
+
+   });
+   */
+
+};
+
+JqueryPaginatorHistory.prototype.updatePagePosition = function (page) {
+
+  this.arrayPagePositions = [];
+
+  this.updateArrayPagePosition(page - 1);
+  this.updateArrayPagePosition(page);
+  this.updateArrayPagePosition(page + 1);
+
+  this.changeLocation(page, null); //
+
+  console.log(this.arrayPagePositions);
+};
+
+JqueryPaginatorHistory.prototype.updateArrayPagePosition = function (page) {
+
+
+  var $page = this.$el.find(this.listItemsPageClass + "[data-page='" + page + "']");
+
+  if ($page.length > 0) {
+    var currentPagePos = {
+      page: page,
+      top: $page.find(this.settings.item).first().offset().top,
+      bottom: $page.find(this.settings.item).last().offset().top + $page.find(this.settings.item).last().outerHeight()
+    };
+
+
+    this.arrayPagePositions[page] = currentPagePos;
+  }
+
+};
+
+
+JqueryPaginatorHistory.prototype.ajaxCall = function (page, isNext, prevLoadOnStart) {
+
+  var page = parseInt(page);
+
+  var _this = this;
+
+  $.ajax({
+    url: _this.setUrlwithPagination(_this.ajaxUrl, page),
+    context: document.body
+  }).done(function (content) {
+
+    // Here's the callback:
+    _this.settings.ajaxDoneBeforeItemsInPage.call(this);
+
+
+    var html = content;
+    var removeLink = false;
+
+    if (content != null && content != "") {
+
+      if (_this.settings.selectorContainer != null) {
+
+        html = $(content).find(_this.settings.selectorContainer).html();
+      }
+
+      if (typeof html !== 'undefined' && html != "") {
+
+
+        var newPageBlock = "<" + _this.settings.blockPageHtmlElement + " class='jph-new-page " + _this.listItemsPage + "' data-page='" + page + "'>" + html + "</" + _this.settings.blockPageHtmlElement + ">";
+
+        if (isNext) {
+
+          _this.$paginatorListContainer.append($(newPageBlock).addClass("jph-appended"));
+
+          page++;
+
+          _this.$next.attr("data-page", page);
+
+
+        } else {
+          //isPrev
+
+
+          _this.$paginatorListContainer.prepend($(newPageBlock).addClass("jph-prepended"));
+
+
+          var scrollTo = 0;
+
+
+          if (prevLoadOnStart) {
+
+            var $currentBlock = _this.$paginatorListContainer.find(_this.listItemsPageClass + "[data-page='" + _this.currentPage + "']");
+            var hash = window.location.hash.substring(1);
+
+
+            if (hash != "" && $currentBlock.find("#" + hash).length > 0) {
+
+              $currentBlock = $currentBlock.find("#" + hash);
+            }
+
+
+            scrollTo = $currentBlock.offset().top + _this.settings.offsetAnchor;
+
+
+            _this.$paginatorListContainer.removeClass("jph-no-first-page");
+          }
+
+          else if (window.pageYOffset != 0) {
+
+
+            var heightPrevPage = _this.$paginatorListContainer.find(_this.listItemsPageClass + "[data-page='" + page + "']").height();
+            scrollTo = window.pageYOffset + heightPrevPage;
+          }
+
+          // adjust scroll to the current page
+          window.scrollTo(0, scrollTo);
+          //   console.log("page scroll ", scrollTo);
+
+
+          if (page > 1) {
+
+
+            page--;
+
+            _this.$prev.attr("data-page", page);
 
 
           } else {
-            //isPrev
 
-
-            _this.$paginatorListContainer.prepend($(newPageBlock).addClass("jph-prepended"));
-
-
-            var scrollTo = 0;
-
-
-            if (prevLoadOnStart) {
-
-              var $currentBlock = _this.$paginatorListContainer.find(_this.listItemsPageClass + "[data-page='" + _this.currentPage + "']");
-              var hash = window.location.hash.substring(1);
-
-
-              if (hash != "" && $currentBlock.find("#" + hash).length > 0) {
-
-                $currentBlock = $currentBlock.find("#" + hash);
-              }
-
-
-              scrollTo = $currentBlock.offset().top + _this.settings.offsetAnchor;
-
-
-              _this.$paginatorListContainer.removeClass("jph-no-first-page");
-            }
-
-            else if (window.pageYOffset != 0) {
-
-
-              var heightPrevPage = _this.$paginatorListContainer.find(_this.listItemsPageClass + "[data-page='" + page + "']").height();
-              scrollTo = window.pageYOffset + heightPrevPage;
-            }
-
-            // adjust scroll to the current page
-            window.scrollTo(0, scrollTo);
-            //   console.log("page scroll ", scrollTo);
-
-
-            if (page > 1) {
-
-
-              page--;
-
-              _this.$prev.attr("data-page", page);
-
-
-            } else {
-
-              removeLink = true;
-            }
-
-
+            removeLink = true;
           }
-        } else {
 
-          removeLink = true;
+
         }
-
       } else {
 
         removeLink = true;
       }
 
-      //remove the link from the page
-      if (removeLink) {
-        if (isNext) {
+    } else {
+
+      removeLink = true;
+    }
+
+    //remove the link from the page
+    if (removeLink) {
+      if (isNext) {
 
 
-          _this.$next.remove();
-          _this.$next = null;
+        _this.$next.remove();
+        _this.$next = null;
 
-        } else {
+      } else {
 
-          _this.$prev.remove();
-          _this.$prev = null;
-        }
+        _this.$prev.remove();
+        _this.$prev = null;
       }
-
-
-      _this.loadingPage = false;
-
-      if(!_this.settings.disableHistory && !_this.settings.disableHistoryOnMove)
-        _this.updatePagePosition(_this.currentPage);
-
-      // Here's the callback:
-      _this.settings.ajaxDoneAfterItemsInPage.call(this);
-
-    });
-  };
-
-
-  Paginator.prototype.changeLocation = function (pageNumber, itemId) {
-
-
-    var newLocation = this.setUrlwithPagination(window.location.href, pageNumber);
-
-    if (typeof itemId !== 'undefined' && itemId != null) {
-
-      newLocation += "#" + itemId;
     }
 
 
-    history.replaceState(null, null, newLocation);
-  };
+    _this.loadingPage = false;
+
+    if (!_this.settings.disableHistory && !_this.settings.disableHistoryOnMove)
+      _this.updatePagePosition(_this.currentPage);
+
+    // Here's the callback:
+    _this.settings.ajaxDoneAfterItemsInPage.call(this);
+
+  });
+};
 
 
-  Paginator.prototype.setUrlwithPagination = function (url, pageNumber) {
+JqueryPaginatorHistory.prototype.changeLocation = function (pageNumber, itemId) {
 
 
-    if (typeof pageNumber === 'number' && pageNumber % 1 === 0) {
+  var newLocation = this.setUrlwithPagination(window.location.href, pageNumber);
 
-      //if there isn't the param page in the url
-      if (url.indexOf(this.settings.paramPage + "=") < 0) {
+  if (typeof itemId !== 'undefined' && itemId != null) {
 
-        return url + (url.split('?')[1] ? '&' : '?') + this.settings.paramPage + "=" + pageNumber;
+    newLocation += "#" + itemId;
+  }
 
-      }
 
-      //else {
+  history.replaceState(null, null, newLocation);
+};
 
-      var regex = new RegExp("(" + this.settings.paramPage + "=).*?((&)(.)*)?$");
 
-      return url.replace(regex, '$1' + pageNumber + '$2');
+JqueryPaginatorHistory.prototype.setUrlwithPagination = function (url, pageNumber) {
 
-      //}
+
+  if (typeof pageNumber === 'number' && pageNumber % 1 === 0) {
+
+    //if there isn't the param page in the url
+    if (url.indexOf(this.settings.paramPage + "=") < 0) {
+
+      return url + (url.split('?')[1] ? '&' : '?') + this.settings.paramPage + "=" + pageNumber;
 
     }
 
-    return url;
-  };
+    //else {
+
+    var regex = new RegExp("(" + this.settings.paramPage + "=).*?((&)(.)*)?$");
+
+    return url.replace(regex, '$1' + pageNumber + '$2');
+
+    //}
+
+  }
+
+  return url;
+};
 
 
-  $.fn.paginatorHistory = function (options /* Init configuration given by developer */) {
+(function ($) {
+  $.fn.jqueryPaginatorHistory = function (options /* Init configuration given by developer */) {
 
     return $(this).each(function () {
 
 
-      var paginatorInstance = new Paginator(this, options);
+      var paginatorInstance = new JqueryPaginatorHistory(this, options);
 
 
       $(this).data('paginator-history', paginatorInstance);
@@ -546,7 +547,4 @@
     });
 
   };
-
-
-  // End of closure.
 })(jQuery);

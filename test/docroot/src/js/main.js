@@ -7,7 +7,7 @@
 $(document).ready(function () {
 
 
-  $(".jph-history").paginatorHistory({
+  $(".jph-history").jqueryPaginatorHistory({
 
 
     selectorContainer: "#test-container",
